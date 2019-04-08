@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  workspace:
+    hostname: docker-workspace
+    build:
+      context: ./Dockerfiles/workspace
+    ports:
+      - "22:22"
+    volumes:
+      - ./:/var/www/html/
+    restart: on-failure
+    extra_hosts:
+      - "localhost:172.16.1.50"
+    tty: true
+    networks:
+      app_net:
+        ipv4_address: 172.16.1.30
+  nginx:
+    hostname: docker-nginx
+    build:
+      context: ./Dockerfiles/nginx
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./:/var/www/html/
+      - ./Dockerfiles/nginx/sites-enabled/:/etc/nginx/sites-enabled/
+    restart: on-failure
+    networks:
+      app_net:
+        ipv4_address: 172.16.1.50
+
+networks:
+  app_net:
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: 172.16.1.0/16
+
