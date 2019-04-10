@@ -1,4 +1,9 @@
-*
+# Ignore everything
+/*
+
+#
+!.gitignore
 !README.md
 !docker-compose.yml
-!Dockerfiles
+!/Logs/
+!/Dockerfiles/

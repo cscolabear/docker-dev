@@ -12,7 +12,7 @@
  - #### fork & clone this repository
  - #### make your folder look like this... (replace `~/Projects` what you want.)
     > e.g.
-    > 
+    >
     > ~/Projects
     >
     > ~/Projects/[your project - 1]
@@ -66,9 +66,8 @@
     - yarn 1.13.0
 
 - #### `~/Projects/Logs/` - nginx log file path
-    > e.g. 
-    > 
+    > e.g.
+    >
     > ~/Projects/Logs/nginx-access.log
     >
     > ~/Projects/Logs/nginx-error.log
-    

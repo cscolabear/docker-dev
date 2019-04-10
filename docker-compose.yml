@@ -8,7 +8,7 @@ services:
     ports:
       - "22:22"
     volumes:
-      - ./:/var/www/html/
+      - ./:/var/www/html
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
@@ -24,8 +24,8 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./:/var/www/html/
-      - ./Dockerfiles/nginx/sites-enabled/:/etc/nginx/sites-enabled/
+      - ./:/var/www/html
+      - ./Dockerfiles/nginx/sites-enabled/:/etc/nginx/sites-enabled
     restart: on-failure
     networks:
       app_net:
@@ -37,4 +37,3 @@ networks:
     ipam:
       config:
         - subnet: 172.16.1.0/16
-
