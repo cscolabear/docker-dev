@@ -3,7 +3,7 @@
     daily
     dateext
     dateformat -%Y%m%d
-    size 1.5M
+    size 2M
     missingok
     rotate 4
     compress
@@ -11,7 +11,9 @@
     notifempty
     sharedscripts
     postrotate
-            [ -f /usr/logs/nginx.pid ] && kill -USR1 `cat /usr/logs/nginx.pid`
+        if [ -f /var/run/nginx.pid ]; then
+            kill -USR1 `cat /var/run/nginx.pid`
+        fi
     endscript
     su root adm
 }
