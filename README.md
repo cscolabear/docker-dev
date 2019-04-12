@@ -1,16 +1,21 @@
 # Docker Compose for local development
 
+> reference from https://laradock.io
+
 ## Index
  - [Setup](#setup)
+   - ...
  - [Usage](#usage)
    - [Add Nginx Virtual Host](#add-nginx-virtual-host)
- - [Information](#information)
+ - [Information](#info)
+   - ...
+   - [docker image size](#docker-image-size)
 
 # Setup
  - #### download docker for MAX(os x)
    > https://docs.docker.com/docker-for-mac/
  - #### fork & clone this repository
- - #### make your folder look like this... (replace `~/Projects` what you want.)
+ - #### make your folder look like this... (👉 replace `~/Projects` what you want.)
     > e.g.
     >
     > ~/Projects
@@ -21,7 +26,7 @@
     >
     > ![docker-for-local-dev-folder](https://user-images.githubusercontent.com/4863629/55706301-74162e80-5a13-11e9-98c6-3101c7e406c7.png)
 
-- #### in command line move to ~/Projects
+- #### in command line move to `~/Projects`
     > ```bash
     > $ chmod -R 755 Logs
     > $ dokcer-compose up -d
@@ -33,15 +38,19 @@
     > ```bash
     > $ cd ~/Projects/ && clear && docker-compose exec workspace bash
     > ```
+    >
     > when connect into Docker Containers successful you can see~
-    > ![docker-for-local-dev-ssh-into](https://user-images.githubusercontent.com/4863629/55706770-99f00300-5a14-11e9-8600-464a3cba62aa.png)
+    > ![docker-for-local-dev-ssh-into](https://user-images.githubusercontent.com/4863629/56189375-60457a80-605a-11e9-9e6d-7a948d339a4c.png)
+    > you can execute composer, node, npm in this container
 
 - #### enjoy Docker 🐳
-    > create index.html
+    > 👉 create index.php & index.html
+    > in `~/Projects`
     >```bash
+    > $ echo -e "<?php\nphpinfo();" > index.php
     > $ echo "<h1>127.0.0.1 - fine</h1>" > index.html
     >```
-    > open browser - http://localhost
+    > open browser - http://localhost or https://localhost
     >
     >![docker-for-local-dev-ssh-localhost](https://user-images.githubusercontent.com/4863629/55710384-1ab2fd00-5a1d-11e9-9b33-dbc6e429b63c.png)
 
@@ -59,15 +68,27 @@
 
 
 ## Info
-- #### Services include...
-  - Nginx - nginx:alpine
-  - NodeJS - alpine-node:10
-    - npm 6.8.0
-    - yarn 1.13.0
+- #### What's in there?
+  > - nginx
+  >   - nginx:alpine
+  >   - https, http2
+  >   - logrotate
+  > - php-fpm
+  >   - php:7.2-fpm
+  > - workspace
+  >   - nvm 0.34.0
+  >   - node v10.15.3
+  >   - npm 6.4.1
 
 - #### `~/Projects/Logs/` - nginx log file path
-    > e.g.
-    >
-    > ~/Projects/Logs/nginx-access.log
-    >
-    > ~/Projects/Logs/nginx-error.log
+  > e.g.
+  >
+  > ~/Projects/Logs/error.log
+  >
+  > ~/Projects/Logs/nginx-access.log
+  >
+  > ~/Projects/Logs/nginx-error.log
+
+- #### docker image size
+  > ![docker-image-size](https://user-images.githubusercontent.com/4863629/56190582-18742280-605d-11e9-9332-dc32ef997b94.png)
+
