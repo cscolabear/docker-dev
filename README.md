@@ -7,9 +7,10 @@
    - ...
  - [Usage](#usage)
    - [Add Nginx Virtual Host](#add-nginx-virtual-host)
+   - [Change PHP Configuration](#change-php-configuration)
  - [Information](#info)
    - ...
-   - [docker image size](#docker-image-size)
+   - [docker image size preview](#docker-image-size)
 
 # Setup
  - #### download docker for MAX(os x)
@@ -66,6 +67,12 @@
      > $ docker-compose restart nginx
      >```
 
+ - #### Change PHP Configuration
+   - > modify `Dockerfiles/php-fpm/php.ini`
+   - restart php-fpm Docker Container
+     > ```base
+     > $ docker-compose restart fpm
+     >```
 
 ## Info
 - #### What's in there?
