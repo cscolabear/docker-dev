@@ -26,6 +26,8 @@ services:
     ports:
       - 3306:3306
     command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./Database/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_USER: developer
