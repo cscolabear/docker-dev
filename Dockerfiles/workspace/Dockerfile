@@ -21,8 +21,8 @@ RUN set -xe; \
     useradd -u ${PUID} -g ${USER} -m ${USER} -G ${USER} && \
     usermod -p "*" ${USER} -s /bin/bash && \
     usermod -aG sudo ${USER} && \
-    sed -e 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' -i /etc/sudoers && \
-    sed -e "s/^wheel:\(.*\)/wheel:\1,${USER}/g" -i /etc/group
+    echo "${USER} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USER} && \
+    chmod 0440 /etc/sudoers.d/${USER}
 
 
 
@@ -82,35 +82,59 @@ RUN echo "" >> ~/.bashrc && \
 
 
 
-###########################################################################
-# Node / NVM:
-###########################################################################
-
-USER $USER
-
-# Check if NVM needs to be installed
-ARG NODE_VERSION='v10.15.3'
-ENV NODE_VERSION ${NODE_VERSION}
-ENV NVM_DIR /home/${USER}/.nvm
-
-# Install nvm (A Node Version Manager)
-RUN mkdir -p $NVM_DIR && \
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash \
-    && . $NVM_DIR/nvm.sh && \
-    # nvm/v0.34.0/install.sh use NODE_VERSION to install
-    # && nvm install ${NODE_VERSION} \
-    # && nvm use ${NODE_VERSION} \
-    # && nvm alias ${NODE_VERSION} \
-    npm install -g gulp && \
-    echo "" >> ~/.bashrc
-
-# Add NVM binaries to root's .bashrc
 USER root
 
-RUN echo "" >> ~/.bashrc && \
-    echo 'export NVM_DIR="/home/${USER}/.nvm"' >> ~/.bashrc && \
-    echo '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm' >> ~/.bashrc && \
-    echo "" >> ~/.bashrc
+RUN groupadd --gid 1001 node \
+    && useradd --uid 1001 --gid node --shell /bin/bash --create-home node
+
+ENV NODE_VERSION 10.15.3
+
+RUN buildDeps='xz-utils' \
+    && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+    && case "${dpkgArch##*-}" in \
+    amd64) ARCH='x64';; \
+    ppc64el) ARCH='ppc64le';; \
+    s390x) ARCH='s390x';; \
+    arm64) ARCH='arm64';; \
+    armhf) ARCH='armv7l';; \
+    i386) ARCH='x86';; \
+    *) echo "unsupported architecture"; exit 1 ;; \
+    esac \
+    && set -ex \
+    && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr $buildDeps --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
+    && for key in \
+    94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
+    FD3A5288F042B6850C66B31F09FE44734EB7990E \
+    71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
+    DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
+    C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
+    B9AE9905FFD7803F25714661B63B535A4C206CA9 \
+    77984A986EBC2AA786BC0F66B01FBB92821C587A \
+    8FCCA13FEF1D0C2E91008E09770F7A9A5AE15600 \
+    4ED778F539E3634C779C87C6D7062848A1AB005C \
+    A48C2BEE680E841632CD4E44F07496B3EB3C1762 \
+    B9E2F5981AA6E0CD28160D9FF13993A75599653C \
+    ; do \
+    gpg --batch --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys "$key" || \
+    gpg --batch --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
+    done \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-$ARCH.tar.xz" \
+    && curl -fsSLO --compressed "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+    && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
+    && grep " node-v$NODE_VERSION-linux-$ARCH.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
+    && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
+    && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
+    && apt-get purge -y --auto-remove $buildDeps \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
 
 
 
