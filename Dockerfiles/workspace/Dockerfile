@@ -11,29 +11,23 @@ ENV PUID ${PUID}
 ARG PGID=1000
 ENV PGID ${PGID}
 
+ARG TZ=UTC
+ENV TZ ${TZ}
+
 
 USER root
 RUN set -xe; \
     apt-get update -yqq && \
-    apt-get install -yqq git sudo && \
+    apt-get install -yqq --no-install-recommends git sudo && \
     # add sudo user
     groupadd -g ${PGID} ${USER} && \
     useradd -u ${PUID} -g ${USER} -m ${USER} -G ${USER} && \
     usermod -p "*" ${USER} -s /bin/bash && \
     usermod -aG sudo ${USER} && \
     echo "${USER} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USER} && \
-    chmod 0440 /etc/sudoers.d/${USER}
-
-
-
-#####################################
-# Set Timezone
-#####################################
-
-USER root
-ARG TZ=UTC
-ENV TZ ${TZ}
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+    chmod 0440 /etc/sudoers.d/${USER} && \
+    # Set Timezone
+    ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 
 
@@ -44,15 +38,15 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 USER root
 
 # Install composer and add its bin to the PATH.
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    chown -R $USER:$USER /home/$USER && \
+    mkdir -p /home/${USER}/.composer/cache && \
+    chown -R $USER:$USER /home/$USER/.composer && \
+    chmod -R 755 /home/$USER/.composer && \
+    composer selfupdate
 
 # Add the composer.json
 COPY ./composer.json /home/${USER}/.composer/composer.json
-RUN chown -R $USER:$USER /home/$USER && \
-    mkdir /home/${USER}/.composer/cache && \
-    chmod -R 777 /home/$USER/.composer/cache && \
-    composer selfupdate
 
 USER $USER
 RUN composer global install && composer clearcache && \
@@ -82,14 +76,16 @@ RUN echo "" >> ~/.bashrc && \
 
 
 
-USER root
-
-RUN groupadd --gid 1001 node \
-    && useradd --uid 1001 --gid node --shell /bin/bash --create-home node
+# node
 
 ENV NODE_VERSION 10.15.3
 
-RUN buildDeps='xz-utils' \
+USER root
+
+RUN groupadd --gid 1001 node \
+    && useradd --uid 1001 --gid node --shell /bin/bash --create-home node && \
+    # https://github.com/GoogleChrome/puppeteer
+    buildDeps='xz-utils' \
     && ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && case "${dpkgArch##*-}" in \
     amd64) ARCH='x64';; \
@@ -102,7 +98,6 @@ RUN buildDeps='xz-utils' \
     esac \
     && set -ex \
     && apt-get update && apt-get install -y ca-certificates curl wget gnupg dirmngr $buildDeps --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/* \
     && for key in \
     94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
     FD3A5288F042B6850C66B31F09FE44734EB7990E \
@@ -127,14 +122,13 @@ RUN buildDeps='xz-utils' \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 --no-same-owner \
     && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && apt-get purge -y --auto-remove $buildDeps \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    # install Chromium
+    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
     && apt-get install -y google-chrome-unstable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst ttf-freefont \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+    --no-install-recommends
 
 
 

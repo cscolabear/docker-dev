@@ -5,8 +5,6 @@ FROM php:7.2-fpm
 RUN set -xe; \
     echo "PS1='\u@\h:\w\$ '" >> ~/.bashrc && \
     echo "" >> ~/.bashrc && \
-    # Install "curl", "libmemcached-dev", "libpq-dev", "libjpeg-dev",
-    #         "libpng-dev", "libfreetype6-dev", "libssl-dev", "libmcrypt-dev",
     apt-get update && \
     pecl channel-update pecl.php.net && \
     apt-get upgrade -y && \
@@ -20,18 +18,9 @@ RUN set -xe; \
     libpng-dev \
     libfreetype6-dev \
     libssl-dev \
-    libmcrypt-dev
-
-# install zip extensions
-# next lines are here becase there is no auto build on docker
-RUN apt-get install -y \
-    libzip-dev \
-    zip \
-    && docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-install zip
-
-# Install the PHP pdo_mysql extention
-RUN docker-php-ext-install pdo_mysql \
+    libmcrypt-dev && \
+    # Install the PHP extention
+    docker-php-ext-install pdo_mysql \
     # Install the PHP pdo_pgsql extention
     && docker-php-ext-install pdo_pgsql \
     # Install the PHP gd library
@@ -40,6 +29,14 @@ RUN docker-php-ext-install pdo_mysql \
     --with-freetype-dir=/usr/include/freetype2 && \
     docker-php-ext-install gd
 
+
+# install zip extensions
+# next lines are here becase there is no auto build on docker
+RUN apt-get install -y --no-install-recommends \
+    libzip-dev \
+    zip \
+    && docker-php-ext-configure zip --with-libzip \
+    && docker-php-ext-install zip
 
 
 COPY ./pool.conf /usr/local/etc/php-fpm.d/pool.conf

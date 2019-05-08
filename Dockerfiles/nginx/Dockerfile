@@ -2,26 +2,26 @@ FROM nginx:alpine
 
 
 
-RUN apk update \
+RUN set -xe; \
+    apk update \
     && apk upgrade \
     && apk add --no-cache openssl bash logrotate \
     && adduser -D -H -u 1000 -s /bin/bash www-data && \
     echo "PS1='\u@\h:\w\$ '" >> ~/.bashrc && \
     echo "" >> ~/.bashrc && \
-    rm -rf /etc/nginx/conf.d
-
-COPY nginx.logrotate /etc/logrotate.d/nginx
-COPY sites.logrotate /etc/logrotate.d/sites
-COPY nginx.conf /etc/nginx/
-
-
-
-# generate SSL certificate
-RUN mkdir /etc/nginx/ssl && \
+    rm -rf /etc/nginx/conf.d && \
+    # generate SSL certificate
+    mkdir /etc/nginx/ssl && \
     openssl genrsa -out "/etc/nginx/ssl/default.key" 2048 && \
     openssl req -new -key "/etc/nginx/ssl/default.key" -out "/etc/nginx/ssl/default.csr" -subj "/CN=default/O=default/C=UK" && \
     openssl x509 -req -days 365 -in "/etc/nginx/ssl/default.csr" -signkey "/etc/nginx/ssl/default.key" -out "/etc/nginx/ssl/default.crt" \
     ;
+
+
+
+COPY nginx.logrotate /etc/logrotate.d/nginx
+COPY sites.logrotate /etc/logrotate.d/sites
+COPY nginx.conf /etc/nginx/
 
 
 
