@@ -27,7 +27,9 @@ RUN set -xe; \
     && docker-php-ext-configure gd \
     --with-jpeg-dir=/usr/lib \
     --with-freetype-dir=/usr/include/freetype2 && \
-    docker-php-ext-install gd
+    docker-php-ext-install gd && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug
 
 
 # install zip extensions
@@ -40,6 +42,7 @@ RUN apt-get install -y --no-install-recommends \
 
 
 COPY ./pool.conf /usr/local/etc/php-fpm.d/pool.conf
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 
 
