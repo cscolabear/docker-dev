@@ -6,8 +6,9 @@ RUN set -xe; \
     apk update \
     && apk upgrade \
     && apk add --no-cache openssl bash logrotate \
-    && adduser -D -H -u 1000 -s /bin/bash www-data && \
-    echo "PS1='\u@\h:\w\$ '" >> ~/.bashrc && \
+    && adduser -u 1000 -D -S -G www-data www-data
+
+RUN echo "PS1='\u@\h:\w\$ '" >> ~/.bashrc && \
     echo "" >> ~/.bashrc && \
     rm -rf /etc/nginx/conf.d && \
     # generate SSL certificate

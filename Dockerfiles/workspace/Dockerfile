@@ -1,4 +1,4 @@
-FROM projects_fpm:latest
+FROM cscolabear/7.2-fpm:latest
 
 
 
