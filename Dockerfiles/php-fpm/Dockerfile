@@ -12,6 +12,7 @@ RUN set -xe; \
     apt-utils \
     curl \
     libmemcached-dev \
+    zlib1g-dev \
     libz-dev \
     libpq-dev \
     libjpeg-dev \
@@ -29,6 +30,8 @@ RUN set -xe; \
     --with-freetype-dir=/usr/include/freetype2 && \
     docker-php-ext-install gd && \
     pecl install xdebug && \
+    pecl install memcached-3.1.3 && \
+    docker-php-ext-enable memcached && \
     docker-php-ext-enable xdebug
 
 
@@ -53,7 +56,8 @@ COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     rm -rf /tmp/pear && \
-    rm -rf /var/cache/apk/*
+    rm -rf /var/cache/apk/* && \
+    docker-php-source delete
 
 WORKDIR /var/www
 
