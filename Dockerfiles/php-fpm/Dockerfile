@@ -25,10 +25,7 @@ RUN set -xe; \
     # Install the PHP pdo_pgsql extention
     && docker-php-ext-install pdo_pgsql \
     # Install the PHP gd library
-    && docker-php-ext-configure gd \
-    --with-jpeg-dir=/usr/lib \
-    --with-freetype-dir=/usr/include/freetype2 && \
-    docker-php-ext-install gd && \
+    && docker-php-ext-install gd && \
     pecl install xdebug && \
     pecl install memcached-3.1.3 && \
     docker-php-ext-enable memcached && \
