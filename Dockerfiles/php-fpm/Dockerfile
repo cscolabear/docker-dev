@@ -29,6 +29,9 @@ RUN set -xe; \
     pecl install xdebug && \
     pecl install memcached-3.1.3 && \
     docker-php-ext-enable memcached && \
+    docker-php-ext-configure opcache --enable-opcache && \
+    docker-php-ext-install opcache && \
+    docker-php-ext-enable opcache && \
     docker-php-ext-enable xdebug
 
 
