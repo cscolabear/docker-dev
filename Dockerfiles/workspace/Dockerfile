@@ -49,7 +49,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY ./composer.json /home/${USER}/.composer/composer.json
 
 USER $USER
-RUN composer global install && composer clearcache && \
+RUN composer clear-cache && composer global install && composer clearcache && \
     # Export composer vendor path
     echo "" >> ~/.bashrc && \
     echo 'export PATH="~/.composer/vendor/bin:$PATH"' >> ~/.bashrc
