@@ -32,6 +32,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_USER: developer
       MYSQL_PASSWORD: password
+    command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
     restart: on-failure
     networks:
       - app_net
