@@ -158,7 +158,7 @@
   >             "request": "launch",
   >             "port": 9001,
   >             "pathMappings": {
-  >                 "/var/www": "$> {workspaceRoot}"
+  >                 "/var/www": "${workspaceRoot}"
   >             },
   >             "log": true
   >         },
@@ -173,3 +173,14 @@
   >     ]
   > }
   > ```
+
+  - vscode debug 設定檔每個專案都要設定一次<br>
+  - 路徑對應重點, 編輯器沒反應時(e.g. vscode) 多半是這個路徑沒有設定正確<br>
+    也可以 ssh 至 fpm container 查看 `/tmp/xdebug.log`<br>
+    >```
+    > "pathMappings": {
+    >     "/var/www": "${workspaceRoot}"
+    >     // or
+    >     "/var/www/[your Project folder]": "${workspaceRoot}"
+    > },
+    >```
