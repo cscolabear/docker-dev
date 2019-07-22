@@ -28,15 +28,17 @@ RUN set -xe; \
     && docker-php-ext-install gd && \
     pecl install xdebug && \
     pecl install memcached-3.1.3 && \
+    pecl install redis-4.0.1 && \
     docker-php-ext-enable memcached && \
     docker-php-ext-configure opcache --enable-opcache && \
     docker-php-ext-install opcache && \
     docker-php-ext-enable opcache && \
+    docker-php-ext-enable redis && \
     docker-php-ext-enable xdebug
 
 
 # install zip extensions
-# next lines are here becase there is no auto build on docker
+# ps. next lines are here becase there is no auto build on docker
 RUN apt-get install -y --no-install-recommends \
     libzip-dev \
     zip \
