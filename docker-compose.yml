@@ -11,6 +11,7 @@ services:
     volumes:
       - ./:/var/www
       - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini
+      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"

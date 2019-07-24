@@ -47,7 +47,6 @@ RUN apt-get install -y --no-install-recommends \
 
 
 COPY ./pool.conf /usr/local/etc/php-fpm.d/pool.conf
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 
 
