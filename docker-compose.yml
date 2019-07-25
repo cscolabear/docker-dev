@@ -39,6 +39,17 @@ services:
       app_net:
         ipv4_address: 172.16.1.50
 
+  memcached:
+    hostname: docker-memcached
+    image: memcached:latest
+    ports:
+      - 11211:11211
+    command:
+      - '-m 128'
+    restart: on-failure
+    networks:
+      - app_net
+
   workspace:
     hostname: docker-workspace
     build:
