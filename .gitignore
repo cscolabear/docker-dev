@@ -3,6 +3,7 @@
 
 #
 !.gitignore
+!.editorconfig
 !README.md
 !docker-compose.yml
 !/Logs/
