@@ -1,0 +1,18 @@
+version: '2'
+
+options:
+  compose-file-path: 'docker-compose.yml'
+  compose-dev-file-path: 'docker-compose-dev.yml'
+  verbose: false
+
+syncs:
+  sync-folder:
+    src: '/Users/cola/Projects'
+    # native_osx or unison (for windows)
+    sync_strategy: native_osx
+    sync_excludes: [
+      '.gitignore',
+      '.git',
+      '.DS_Store',
+      '.vscode'
+    ]

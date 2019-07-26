@@ -8,3 +8,5 @@
 !docker-compose.yml
 !/Logs/
 !/Dockerfiles/
+!docker-compose-dev.yml
+!docker-sync.yml
