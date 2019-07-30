@@ -38,6 +38,24 @@ RUN set -xe; \
     docker-php-ext-enable xdebug
 
 
+
+
+# Install needed php extensions: memcache
+RUN curl -fsSL 'https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip' -o memcache.zip \
+    && unzip memcache.zip \
+    && rm memcache.zip \
+    && ( \
+    cd pecl-memcache-NON_BLOCKING_IO_php7 \
+    && phpize \
+    && ./configure --enable-memcache \
+    && make \
+    && make install \
+    ) \
+    && rm -r pecl-memcache-NON_BLOCKING_IO_php7 \
+    && docker-php-ext-enable memcache
+
+
+
 # install zip extensions
 # ps. next lines are here becase there is no auto build on docker
 RUN apt-get install -y --no-install-recommends \
