@@ -1,5 +1,6 @@
 {
     "require": {
-        "hirak/prestissimo": "^0.3.5"
+        "hirak/prestissimo": "^0.3.5",
+        "phalcon/devtools": "~3.4"
     }
 }
