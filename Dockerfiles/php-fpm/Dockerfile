@@ -10,6 +10,7 @@ RUN set -xe; \
     apt-get upgrade -y && \
     apt-get install -y --no-install-recommends \
     apt-utils \
+    unzip \
     curl \
     libmemcached-dev \
     zlib1g-dev \
