@@ -22,7 +22,7 @@ RUN set -xe; \
     libssl-dev \
     libmcrypt-dev && \
     # Install the PHP extention
-    docker-php-ext-install pdo_mysql \
+    docker-php-ext-install pdo_mysql mysqli \
     # Install the PHP pdo_pgsql extention
     && docker-php-ext-install pdo_pgsql \
     # Install the PHP gd library
