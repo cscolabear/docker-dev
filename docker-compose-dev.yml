@@ -1,0 +1,10 @@
+version: '3'
+
+volumes:
+  sync-folder:
+    external: true
+
+services:
+  fpm:
+    volumes:
+      - sync-folder:/var/www:nocopy
