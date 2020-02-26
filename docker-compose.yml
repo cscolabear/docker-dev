@@ -81,7 +81,7 @@ services:
       app_net:
         ipv4_address: 172.16.1.30
 
-  jenkins:
+  JENKINS:
     hostname: docker-jenkins
     image: jenkinsci/blueocean
     user: root
