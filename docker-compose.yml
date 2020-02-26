@@ -68,8 +68,6 @@ services:
       - ./:/var/www
     depends_on:
       - FPM
-      - MYSQL
-      - MEMCACHED
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
