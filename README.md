@@ -3,6 +3,7 @@
 > - https ready!
 > - multiple domain / project support
 > - PHP Xdebug
+> - php7wrapper
 >
 > reference from https://laradock.io
 
@@ -14,8 +15,8 @@
    - [Change PHP Configuration](#change-php-configuration)
  - [Information](#info)
    - ...
-   - [docker image size preview](#docker-image-size)
 - [Xdebug & VSCode](#xdebug--vscode)
+- [PHP Wrapper](#php-wrapper)
 
 # Setup
 - #### download & install docker for MAX(os x)
@@ -26,9 +27,10 @@
   >```bash
   >$ git clone https://github.com/cscolabear/docker-dev.git Projects
   >
-  > # [optional] change branch, if you need mysql
+  > # [optional] create your local branch e.g. local-dev, and merge branch, if you need mysql or memcached
   > $ git checkout service/add-mysql
   > ```
+
 - #### make your folder look like this... (👉 replace `~/Projects` what you want.)
   > e.g.
   >
@@ -44,19 +46,22 @@
   > ```bash
   > $ cd ~/Projects
   > $ chmod -R 755 Logs
-  > $ dokcer-compose up -d
+  > $ dokcer-compose --compatibility up -d
   > ```
+  > (Compatibility mode: https://docs.docker.com/compose/compose-file/compose-versioning/#compatibility-mode)
+  >
   >
   > ⏳ Please wait
+  >
 
 - #### SSH into a container
   > ```bash
-  > $ cd ~/Projects/ && clear && docker-compose exec workspace bash
+  > $ cd ~/Projects/ && clear && docker-compose exec WORKSPACE bash
   > ```
   >
   > looked like after connected~
   > ![docker-for-local-dev-ssh-into](https://user-images.githubusercontent.com/4863629/56189375-60457a80-605a-11e9-9e6d-7a948d339a4c.png)
-  > you can execute composer, node, npm in here
+  > you can execute composer, node, npm in this container
 
 - #### enjoy Docker 🐳
   > 👉 create index.php & index.html
@@ -111,7 +116,7 @@
   > - modify `Dockerfiles/php-fpm/php.ini`
   > - restart php-fpm Docker Container
   > ```base
-  > $ docker-compose restart fpm
+  > $ docker-compose restart FPM
   >```
 
 ## Info
@@ -135,11 +140,6 @@
   > ~/Projects/Logs/nginx-access.log
   >
   > ~/Projects/Logs/nginx-error.log
-
-- #### docker image size
-  > ![docker-image-size](https://user-images.githubusercontent.com/4863629/58860143-0d915200-86de-11e9-9b5a-d4cf688a230d.png)
-
-
 
 - #### Xdebug & VSCode
   > - install the vscode extension <br>
@@ -175,8 +175,8 @@
   > ```
 
   - vscode debug 設定檔每個專案都要設定一次<br>
-  - 路徑對應重點, 編輯器沒反應時(e.g. vscode) 多半是這個路徑沒有設定正確<br>
-    也可以 ssh 至 fpm container 查看 `/tmp/xdebug.log`<br>
+  - 路徑對應是重點(pathMappings), 編輯器沒反應時(e.g. vscode) 多半是這個路徑沒有設定正確<br>
+    也可以 ssh 進入 fpm container 查看 `/tmp/xdebug.log`<br>
     >```
     > "pathMappings": {
     >     "/var/www": "${workspaceRoot}"
@@ -184,3 +184,24 @@
     >     "/var/www/[your Project folder]": "${workspaceRoot}"
     > },
     >```
+    >
+  > - xdebug.ini
+  > ; for MAC os x
+  > xdebug.remote_host=host.docker.internal
+  >
+
+# PHP Wrapper
+ > branch exposure-php 內的 php7wrapper (https://github.com/cscolabear/docker-dev/blob/exposure-php/php7wrapper)
+
+ 因為本機 MAC os x 和 docker 環境內的 PHP 版本不同
+ 所以利用 `php7wrapper` 曝光 docker 內的 php 讓本機開發與執行使用同樣的 php 版本
+
+ - 將 `exposure-php` branch merge 至 local-dev branch
+
+ ```bash
+ $ ln -s ~/Projects/php7wrapper /usr/local/bin php
+ $ chmod +x /usr/local/bin php
+ ```
+ (MAC osx 原生 PHP path: /usr/bin/php)
+
+
