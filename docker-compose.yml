@@ -1,7 +1,7 @@
-version: '3'
+version: '3.7'
 
 services:
-  fpm:
+  FPM:
     hostname: docker-php-fpm
     build:
       context: ./Dockerfiles/php-fpm
@@ -12,7 +12,16 @@ services:
       - ./:/var/www
       - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini
       - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
-    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
       # - "any-your-project-domain:172.16.1.50"
@@ -20,7 +29,7 @@ services:
       app_net:
         ipv4_address: 172.16.1.40
 
-  mysql:
+  MYSQL:
     hostname: docker-mysql
     image: mysql:5.7
     ports:
@@ -33,11 +42,20 @@ services:
       MYSQL_USER: developer
       MYSQL_PASSWORD: password
     command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
-    restart: on-failure
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+      restart_policy:
+        condition: on-failure
     networks:
       - app_net
 
-  nginx:
+  NGINX:
     hostname: docker-nginx
     build:
       context: ./Dockerfiles/nginx
@@ -50,13 +68,22 @@ services:
       - ./Logs:/var/log/nginx
       - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled
     depends_on:
-      - fpm
-    restart: on-failure
+      - FPM
+    deploy:
+      resources:
+        limits:
+          cpus: '0.10'
+          memory: 30M
+        reservations:
+          cpus: '0.05'
+          memory: 10M
+      restart_policy:
+        condition: on-failure
     networks:
       app_net:
         ipv4_address: 172.16.1.50
 
-  workspace:
+  WORKSPACE:
     hostname: docker-workspace
     build:
       context: ./Dockerfiles/workspace
@@ -66,7 +93,9 @@ services:
     volumes:
       - ./:/var/www
     depends_on:
-      - fpm
+      - FPM
+      - MYSQL
+      - MEMCACHED
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
