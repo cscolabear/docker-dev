@@ -1,0 +1,18 @@
+apps:
+  - script: '/var/www/express-test/bin/www'
+    # node_args: "--inspect-brk=0.0.0.0"
+    name     : 'node-server'
+    ignore_watch: ["/var/www/express-test/node_modules", "/var/www/express-test/public"]
+    watch: ['/var/www/express-test']
+    watch_options:
+      usePolling": true
+    # exec_mode: 'cluster'
+    # instances: 1
+    log_date_format: "YYYY-MM-DD HH:mm Z"
+    error_file: '/var/logs/pm2-err.log'
+    out_file: '/var/logs/pm2-out.log'
+    log_file: '/var/logs/pm2-combined.log'
+    time: true
+    env:
+      DEBUG: true
+      PORT: 3000

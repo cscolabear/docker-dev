@@ -1,6 +1,9 @@
 FROM node:10-slim
 
 
+RUN npm install pm2 -g
+
+
 
 #
 # Clean up
@@ -13,4 +16,6 @@ RUN apt-get clean && \
 
 WORKDIR /var/www
 
-EXPOSE 8080
+EXPOSE 3000
+
+CMD ["pm2-docker", "/pm2-process.yml"]
