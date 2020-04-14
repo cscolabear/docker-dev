@@ -78,7 +78,7 @@ RUN echo "" >> ~/.bashrc && \
 
 # node
 
-ENV NODE_VERSION 10.15.3
+ENV NODE_VERSION 12.16.2
 
 USER root
 
