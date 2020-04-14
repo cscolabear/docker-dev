@@ -86,7 +86,7 @@ services:
       context: ./Dockerfiles/workspace
     image: cscolabear/workspace:latest
     ports:
-      - "22:22"
+      - "3000"
     volumes:
       - ./:/var/www
     depends_on:
