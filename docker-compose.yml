@@ -9,9 +9,9 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./:/var/www
-      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini
-      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ./:/var/www:delegated
+      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
     deploy:
       resources:
         limits:
@@ -62,9 +62,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./:/var/www
-      - ./Logs:/var/log/nginx
-      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ./:/var/www:delegated
+      - ./Logs:/var/log/nginx:delegated
+      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled:ro
     depends_on:
       - FPM
     deploy:
@@ -88,7 +88,7 @@ services:
     ports:
       - "3000"
     volumes:
-      - ./:/var/www
+      - ./:/var/www:delegated
     depends_on:
       - FPM
       - MYSQL
