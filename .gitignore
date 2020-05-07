@@ -1,10 +1,4 @@
-# Ignore everything
-/*
+.env
 
-#
-!.gitignore
-!.editorconfig
-!README.md
-!docker-compose.yml
-!/Logs/
-!/Dockerfiles/
+.DS_Store
+.vscode/*
