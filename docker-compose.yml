@@ -37,7 +37,7 @@ services:
       - "3000"
       - "9229:9229"
     volumes:
-      - ./:/var/www
+      - ${VOLUMES_DRIVER}:/var/www
       - ./Dockerfiles/node/pm2-process.yml:/pm2-process.yml
       - ./Logs:/var/logs
     deploy:
