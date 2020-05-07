@@ -12,6 +12,8 @@ RUN set -xe; \
     apt-utils \
     unzip \
     curl \
+    libzip-dev \
+    zip \
     libmemcached-dev \
     zlib1g-dev \
     libz-dev \
@@ -35,16 +37,34 @@ RUN set -xe; \
     docker-php-ext-install opcache && \
     docker-php-ext-enable opcache && \
     docker-php-ext-enable redis && \
-    docker-php-ext-enable xdebug
+    docker-php-ext-enable xdebug && \
+    docker-php-ext-configure zip --with-libzip && \
+    docker-php-ext-install zip
 
 
-# install zip extensions
-# ps. next lines are here becase there is no auto build on docker
-RUN apt-get install -y --no-install-recommends \
-    libzip-dev \
-    zip \
-    && docker-php-ext-configure zip --with-libzip \
-    && docker-php-ext-install zip
+# install, upgrade openssl
+RUN apt-get update -yqq \
+ && apt-get install -y --no-install-recommends openssl \
+ && sed -i 's,^\(MinProtocol[ ]*=\).*,\1'TLSv1.0',g' /etc/ssl/openssl.cnf \
+ && sed -i 's,^\(CipherString[ ]*=\).*,\1'DEFAULT@SECLEVEL=1',g' /etc/ssl/openssl.cnf\
+ && rm -rf /var/lib/apt/lists/*
+
+
+
+# Install needed php extensions: memcache
+RUN curl -fsSL 'https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip' -o memcache.zip \
+    && unzip memcache.zip \
+    && rm memcache.zip \
+    && ( \
+    cd pecl-memcache-NON_BLOCKING_IO_php7 \
+    && phpize \
+    && ./configure --enable-memcache \
+    && make \
+    && make install \
+    ) \
+    && rm -r pecl-memcache-NON_BLOCKING_IO_php7 \
+    && docker-php-ext-enable memcache
+
 
 
 COPY ./pool.conf /usr/local/etc/php-fpm.d/pool.conf

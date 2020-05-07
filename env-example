@@ -1,0 +1,13 @@
+#
+# DockerDev Variables
+#
+
+# e.g. /Users/USER_NAME/Projects
+VOLUMES_DRIVER=
+
+
+
+# mysql
+MYSQL_ROOT_PASSWORD=password
+MYSQL_USER=developer
+MYSQL_PASSWORD=password

@@ -9,9 +9,9 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./:/var/www
-      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini
-      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${VOLUMES_DRIVER}:/var/www:delegated
+      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
     deploy:
       resources:
         limits:
@@ -37,9 +37,9 @@ services:
     volumes:
       - ./Database/mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: developer
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
     deploy:
       resources:
@@ -62,9 +62,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./:/var/www
-      - ./Logs:/var/log/nginx
-      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ${VOLUMES_DRIVER}:/var/www:delegated
+      - ./Logs:/var/log/nginx:delegated
+      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled:ro
     depends_on:
       - FPM
     deploy:
@@ -86,9 +86,9 @@ services:
       context: ./Dockerfiles/workspace
     image: cscolabear/workspace:latest
     ports:
-      - "22:22"
+      - "3000"
     volumes:
-      - ./:/var/www
+      - ${VOLUMES_DRIVER}:/var/www:delegated
     depends_on:
       - FPM
       - MYSQL
@@ -96,7 +96,6 @@ services:
     extra_hosts:
       - "localhost:172.16.1.50"
       # - "any-your-project-domain:172.16.1.50"
-    tty: true
     networks:
       app_net:
         ipv4_address: 172.16.1.30
