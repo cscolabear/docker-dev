@@ -4,3 +4,9 @@
 
 # e.g. /Users/USER_NAME/Projects
 VOLUMES_DRIVER=
+
+
+
+# memcached
+MEMCACHED_USERNAME=
+MEMCACHED_PASSWORD=
