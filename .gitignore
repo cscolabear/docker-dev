@@ -1,11 +1,4 @@
-# Ignore everything
-/*
+.env
 
-#
-!.gitignore
-!.editorconfig
-!README.md
-!docker-compose.yml
-!/Logs/
-!/Dockerfiles/
-!php7wrapper
+.DS_Store
+.vscode/*
