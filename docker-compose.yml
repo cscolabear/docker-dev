@@ -28,6 +28,31 @@ services:
       app_net:
         ipv4_address: 172.16.1.40
 
+  MYSQL:
+    hostname: docker-mysql
+    image: mysql:5.7
+    ports:
+      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./Database/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          memory: 256M
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app_net
+
   NGINX:
     hostname: docker-nginx
     build:
@@ -61,8 +86,8 @@ services:
     ports:
       - 11211:11211
     environment:
-      - MEMCACHED_USERNAME: ${MEMCACHED_USERNAME}
-      - MEMCACHED_PASSWORD: ${MEMCACHED_PASSWORD}
+      - MEMCACHED_USERNAME=${MEMCACHED_USERNAME}
+      - MEMCACHED_PASSWORD=${MEMCACHED_PASSWORD}
     command:
       - '-m 128'
     deploy:
@@ -87,6 +112,7 @@ services:
     depends_on:
       - FPM
       - MEMCACHED
+      - MYSQL
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
