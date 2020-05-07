@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# https://gist.github.com/mihow/9c7f559807069a03e302605691f85572
+# Local .env
+if [ -f .env ]; then
+    # Load Environment Variables
+    export $(cat .env | grep -v '#' | awk '/=/ {print $1}')
+    # For instance, will be example_kaggle_key
+    echo $KAGGLE_KEY
+fi
+
+docker run --rm -i \
+    -v $VOLUMES_DRIVER:/var/www \
+    cscolabear/7.2-fpm php "$@"

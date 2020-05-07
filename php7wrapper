@@ -1,5 +1,0 @@
-#!/bin/bash
-
-docker run --rm -i \
-    -v $PWD:/var/www \
-    cscolabear/7.2-fpm php "$@"
