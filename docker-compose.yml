@@ -37,9 +37,9 @@ services:
     volumes:
       - ./Database/mysql:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_USER: developer
-      MYSQL_PASSWORD: password
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
     deploy:
       resources:
