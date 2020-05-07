@@ -9,16 +9,15 @@ services:
     ports:
       - 9000:9000
     volumes:
-      - ./:/var/www
-      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini
-      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+      - ${VOLUMES_DRIVER}:/var/www:delegated
+      - ./Dockerfiles/php-fpm/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./Dockerfiles/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini:ro
     deploy:
       resources:
         limits:
           cpus: '0.50'
           memory: 512M
         reservations:
-          cpus: '0.25'
           memory: 128M
       restart_policy:
         condition: on-failure
@@ -40,9 +39,9 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./:/var/www
-      - ./Logs:/var/log/nginx
-      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - ${VOLUMES_DRIVER}:/var/www:delegated
+      - ./Logs:/var/log/nginx:delegated
+      - ./Dockerfiles/nginx/sites-enabled:/etc/nginx/sites-enabled:ro
     depends_on:
       - FPM
     deploy:
@@ -51,7 +50,6 @@ services:
           cpus: '0.10'
           memory: 30M
         reservations:
-          cpus: '0.05'
           memory: 10M
       restart_policy:
         condition: on-failure
@@ -65,9 +63,9 @@ services:
       context: ./Dockerfiles/workspace
     image: cscolabear/workspace:latest
     ports:
-      - 22:22
+      - "3000"
     volumes:
-      - ./:/var/www
+      - ${VOLUMES_DRIVER}:/var/www:delegated
     depends_on:
       - FPM
     restart: on-failure
@@ -76,7 +74,6 @@ services:
       - "local.rainy-to-do-app-api:172.16.1.50"
       - "local.news-notification:172.16.1.50"
       # - "any-your-project-domain:172.16.1.50"
-    tty: true
     networks:
       app_net:
         ipv4_address: 172.16.1.30
