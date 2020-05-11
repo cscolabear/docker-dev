@@ -80,6 +80,26 @@ services:
       app_net:
         ipv4_address: 172.16.1.50
 
+  MEMCACHED:
+    hostname: docker-memcached
+    image: memcached:latest
+    ports:
+      - 11211:11211
+    environment:
+      - MEMCACHED_USERNAME=${MEMCACHED_USERNAME}
+      - MEMCACHED_PASSWORD=${MEMCACHED_PASSWORD}
+    command:
+      - '-m 128'
+    deploy:
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 192M
+      restart_policy:
+        condition: on-failure
+    networks:
+      - app_net
+
   WORKSPACE:
     hostname: docker-workspace
     build:
@@ -91,6 +111,8 @@ services:
       - ${VOLUMES_DRIVER}:/var/www:delegated
     depends_on:
       - FPM
+      - MYSQL
+      - MEMCACHED
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
