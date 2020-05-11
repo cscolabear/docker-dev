@@ -28,31 +28,6 @@ services:
       app_net:
         ipv4_address: 172.16.1.40
 
-  MYSQL:
-    hostname: docker-mysql
-    image: mysql:5.7
-    ports:
-      - 3306:3306
-    command: --default-authentication-plugin=mysql_native_password
-    volumes:
-      - ./Database/mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    command: mysqld --sql_mode="" --character-set-server=utf8 --init-connect='SET NAMES UTF8;'
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
-        reservations:
-          memory: 256M
-      restart_policy:
-        condition: on-failure
-    networks:
-      - app_net
-
   NGINX:
     hostname: docker-nginx
     build:
@@ -80,26 +55,6 @@ services:
       app_net:
         ipv4_address: 172.16.1.50
 
-  MEMCACHED:
-    hostname: docker-memcached
-    image: memcached:latest
-    ports:
-      - 11211:11211
-    environment:
-      - MEMCACHED_USERNAME=${MEMCACHED_USERNAME}
-      - MEMCACHED_PASSWORD=${MEMCACHED_PASSWORD}
-    command:
-      - '-m 128'
-    deploy:
-      resources:
-        limits:
-          cpus: '0.20'
-          memory: 192M
-      restart_policy:
-        condition: on-failure
-    networks:
-      - app_net
-
   WORKSPACE:
     hostname: docker-workspace
     build:
@@ -111,8 +66,6 @@ services:
       - ${VOLUMES_DRIVER}:/var/www:delegated
     depends_on:
       - FPM
-      - MEMCACHED
-      - MYSQL
     restart: on-failure
     extra_hosts:
       - "localhost:172.16.1.50"
@@ -120,6 +73,49 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.1.30
+
+  ELASTICSEARCH:
+    hostname: docker-es
+    build:
+      context: ./Dockerfiles/elasticsearch
+    image: cscolabear/elasticsearch:latest
+    environment:
+      - node.name=es01
+      - 'discovery.type=single-node'
+      - cluster.name=es-docker-cluster
+      - bootstrap.memory_lock=true
+      - 'http.host=127.0.0.1'
+      - 'transport.host=127.0.0.1'
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - 'xpack.security.enabled=false'
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - ./Database/elasticsearch/index:/usr/share/elasticsearch/data:delegated
+      - ./Dockerfiles/elasticsearch/custom-dict.txt:/usr/share/elasticsearch/config/analysis-ik/custom/custom-dict.dic:ro
+      - ./Dockerfiles/elasticsearch/synonym.txt:/usr/share/elasticsearch/config/analysis/synonym.txt:ro
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+      app_net:
+        ipv4_address: 172.16.1.90
+
+  KIBANA:
+    image: kibana:7.6.2
+    hostname: docker-kibana
+    environment:
+      SERVER_NAME: kibana-server
+      ELASTICSEARCH_URL: http://127.0.0.1:9200
+    depends_on:
+      - ELASTICSEARCH
+    ports:
+      - "5601:5601"
+    restart: on-failure
+    networks:
+      app_net:
+        ipv4_address: 172.16.1.100
 
 networks:
   app_net:
