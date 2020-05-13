@@ -57,7 +57,7 @@ services:
 
   MEMCACHED:
     hostname: docker-memcached
-    image: memcached:latest
+    image: memcached:1.5
     ports:
       - 11211:11211
     environment:
