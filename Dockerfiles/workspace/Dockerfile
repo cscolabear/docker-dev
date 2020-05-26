@@ -1,4 +1,4 @@
-FROM cscolabear/7.2-fpm:latest
+FROM cscolabear/7.3-fpm:latest
 
 
 

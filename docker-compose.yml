@@ -5,7 +5,7 @@ services:
     hostname: docker-php-fpm
     build:
       context: ./Dockerfiles/php-fpm
-    image: cscolabear/7.2-fpm:latest
+    image: cscolabear/7.3-fpm:latest
     ports:
       - 9000:9000
     volumes:
