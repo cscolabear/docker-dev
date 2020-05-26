@@ -128,7 +128,7 @@
   >   - https, http2
   >   - logrotate
   > - php-fpm
-  >   - php:7.2-fpm
+  >   - php:7.3-fpm
   > - workspace
   >   - nvm 0.34.0
   >   - node v10.15.3

@@ -11,4 +11,4 @@ fi
 
 docker run --rm -i \
     -v $VOLUMES_DRIVER:/var/www \
-    cscolabear/7.2-fpm php "$@"
+    cscolabear/7.3-fpm php "$@"
