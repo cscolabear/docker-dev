@@ -79,6 +79,9 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.1.50
+        # aliases:
+          # - any-your-project-domain
+          # - local.project
 
   MEMCACHED:
     hostname: docker-memcached
@@ -108,7 +111,7 @@ services:
     ports:
       - "3000"
     volumes:
-      - ${VOLUMES_DRIVER}:/var/www:delegated
+      - ${VOLUMES_DRIVER}:/var/www
     depends_on:
       - FPM
       - MYSQL

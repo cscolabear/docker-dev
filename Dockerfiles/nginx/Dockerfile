@@ -1,4 +1,4 @@
-FROM nginx:1.18-alpine
+FROM fholzer/nginx-brotli:v1.18.0
 
 
 
@@ -6,7 +6,8 @@ RUN set -xe; \
     apk update \
     && apk upgrade \
     && apk add --no-cache openssl bash logrotate \
-    && adduser -u 1000 -D -S -G www-data www-data
+    && addgroup -g 82 -S www-data ; \
+    adduser -u 82 -D -S -G www-data www-data && exit 0 ; exit 1
 
 RUN echo "PS1='\u@\h:\w\$ '" >> ~/.bashrc && \
     echo "" >> ~/.bashrc && \
@@ -39,3 +40,5 @@ WORKDIR /var/www
 
 
 EXPOSE 80 443
+
+CMD ["nginx", "-g", "daemon off;"]
