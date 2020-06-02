@@ -5,7 +5,7 @@ services:
     hostname: docker-php-fpm
     build:
       context: ./Dockerfiles/php-fpm
-    image: cscolabear/7.3-fpm:latest
+    image: cscolabear/7.3-fpm:0.1
     ports:
       - 9000:9000
     volumes:
@@ -57,7 +57,7 @@ services:
     hostname: docker-nginx
     build:
       context: ./Dockerfiles/nginx
-    image: cscolabear/nginx:latest
+    image: cscolabear/nginx:0.1-brotli
     ports:
       - 80:80
       - 443:443
@@ -107,7 +107,7 @@ services:
     hostname: docker-workspace
     build:
       context: ./Dockerfiles/workspace
-    image: cscolabear/workspace:latest
+    image: cscolabear/workspace:0.2
     ports:
       - "3000"
     volumes:
