@@ -35,7 +35,7 @@ services:
       - 3306:3306
     command: --default-authentication-plugin=mysql_native_password
     volumes:
-      - ./Database/mysql:/var/lib/mysql
+      - ./Database/mysql:/var/lib/mysql:delegated
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_USER=${MYSQL_USER}
@@ -123,6 +123,39 @@ services:
     networks:
       app_net:
         ipv4_address: 172.16.1.30
+
+  # drone-server:
+  #   image: drone/drone:1
+  #   ports:
+  #     - 8080:80
+  #   volumes:
+  #     - ./Database/drone:/data
+  #   restart: always
+  #   environment:
+  #     - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
+  #     - DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO}
+  #     - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+
+  #     # GitHub Config
+  #     - DRONE_GITHUB_SERVER=https://github.com
+  #     - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
+  #     - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
+
+  #     - DRONE_LOGS_PRETTY=true
+  #     - DRONE_LOGS_COLOR=true
+
+  # drone-runner:
+  #   image: drone/drone-runner-docker:1
+  #   restart: always
+  #   depends_on:
+  #     - drone-server
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   environment:
+  #     - DRONE_RPC_HOST=${DRONE_RPC_HOST}
+  #     - DRONE_RPC_PROTO=${DRONE_RPC_PROTO}
+  #     - DRONE_RPC_SECRET=${DRONE_RPC_SECRET}
+  #     - DRONE_RUNNER_CAPACITY=1
 
 networks:
   app_net:
