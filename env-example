@@ -17,3 +17,23 @@ MEMCACHED_PASSWORD=
 MYSQL_ROOT_PASSWORD=
 MYSQL_USER=
 MYSQL_PASSWORD=
+
+
+
+# use drone server container name
+
+DRONE_SERVER_HOST=
+DRONE_SERVER_PROTO=
+
+# openssl rand -hex 16
+DRONE_RPC_SECRET=
+
+DRONE_RPC_HOST=drone-server
+DRONE_RPC_PROTO=http
+
+DRONE_GITHUB_CLIENT_ID=
+DRONE_GITHUB_CLIENT_SECRET=
+
+# https://docs.drone.io/server/reference/drone-user-create/
+DRONE_USER_CREATE=
+DRONE_USER_FILTER=
