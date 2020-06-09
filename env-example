@@ -4,3 +4,11 @@
 
 # e.g. /Users/USER_NAME/Projects
 VOLUMES_DRIVER=
+
+
+
+# use drone server container name
+
+# https://docs.drone.io/server/reference/drone-user-create/
+DRONE_USER_CREATE=username:cscolabear,admin:true
+DRONE_USER_FILTER=cscolabear
