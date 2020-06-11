@@ -84,7 +84,14 @@ services:
       - 8080:80
     volumes:
       - ./Database/drone:/data
-    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+      restart_policy:
+        condition: on-failure
     environment:
       - DRONE_SERVER_HOST=${DRONE_SERVER_HOST}
       - DRONE_SERVER_PROTO=${DRONE_SERVER_PROTO}
@@ -97,8 +104,9 @@ services:
       - DRONE_GITHUB_CLIENT_ID=${DRONE_GITHUB_CLIENT_ID}
       - DRONE_GITHUB_CLIENT_SECRET=${DRONE_GITHUB_CLIENT_SECRET}
 
-      - DRONE_LOGS_PRETTY=true
-      - DRONE_LOGS_COLOR=true
+      # - DRONE_LOGS_DEBUG=true
+      # - DRONE_LOGS_PRETTY=true
+      # - DRONE_LOGS_COLOR=true
     networks:
       - app_net
 
@@ -109,6 +117,14 @@ services:
       - drone-server
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+      restart_policy:
+        condition: on-failure
     environment:
       - DRONE_RPC_HOST=${DRONE_RPC_HOST}
       - DRONE_RPC_PROTO=${DRONE_RPC_PROTO}
