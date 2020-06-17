@@ -4,8 +4,8 @@ services:
   FPM:
     hostname: docker-php-fpm
     build:
-      context: ./Dockerfiles/php-fpm
-    image: cscolabear/7.3-fpm:0.1
+      context: ./Dockerfiles/swoole-fpm
+    image: cscolabear/swoole-fpm-7.3-fpm:0.1
     ports:
       - 9000:9000
     volumes:
