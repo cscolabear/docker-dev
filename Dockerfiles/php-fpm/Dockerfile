@@ -71,6 +71,11 @@ COPY ./pool.conf /usr/local/etc/php-fpm.d/pool.conf
 
 
 
+RUN pecl install swoole && \
+    docker-php-ext-enable swoole
+
+
+
 #
 # Clean up
 #

@@ -5,7 +5,7 @@ services:
     hostname: docker-php-fpm
     build:
       context: ./Dockerfiles/php-fpm
-    image: cscolabear/7.3-fpm:0.1
+    image: cscolabear/swoole-fpm-7.3-fpm:0.1
     ports:
       - 9000:9000
     volumes:
@@ -62,9 +62,9 @@ services:
     hostname: docker-workspace
     build:
       context: ./Dockerfiles/workspace
-    image: cscolabear/workspace:0.2
+    image: cscolabear/workspace-swoole:0.2
     ports:
-      - "3000"
+      - 3000:3000
     volumes:
       - ${VOLUMES_DRIVER}:/var/www
     depends_on:
