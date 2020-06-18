@@ -1,4 +1,4 @@
-FROM cscolabear/7.2-fpm:latest
+FROM cscolabear/7.3-fpm:0.1
 
 
 
@@ -78,7 +78,7 @@ RUN echo "" >> ~/.bashrc && \
 
 # node
 
-ENV NODE_VERSION 10.15.3
+ENV NODE_VERSION 12.17.0
 
 USER root
 
