@@ -128,7 +128,7 @@
   >   - https, http2
   >   - logrotate
   > - php-fpm
-  >   - php:7.2-fpm
+  >   - php:7.3-fpm
   > - workspace
   >   - nvm 0.34.0
   >   - node v10.15.3
@@ -177,6 +177,9 @@
   > ```
 
   - vscode debug 設定檔每個專案都要設定一次<br>
+    - e.g. vscode 打開的專案目錄名稱為 `my-project`，${workspaceRoot} = /var/www/my-project<br>
+    所以設定應該是： "/var/www/my-project": "${workspaceRoot}"
+
   - 路徑對應是重點(pathMappings), 編輯器沒反應時(e.g. vscode) 多半是這個路徑沒有設定正確<br>
     也可以 ssh 進入 fpm container 查看 `/tmp/xdebug.log`<br>
     >```
