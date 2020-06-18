@@ -65,7 +65,7 @@ services:
       context: ./Dockerfiles/workspace
     image: cscolabear/workspace:0.2
     ports:
-      - "3000"
+      - 3000:3000
     volumes:
       - ${VOLUMES_DRIVER}:/var/www
     depends_on:
