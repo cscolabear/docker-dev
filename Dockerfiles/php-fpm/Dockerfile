@@ -51,6 +51,7 @@ RUN apt-get update -yqq \
 
 
 
+
 # Install needed php extensions: memcache
 RUN curl -fsSL 'https://github.com/websupport-sk/pecl-memcache/archive/NON_BLOCKING_IO_php7.zip' -o memcache.zip \
     && unzip memcache.zip \
